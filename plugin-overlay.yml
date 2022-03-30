@@ -1,0 +1,47 @@
+#@ load("@ytt:overlay", "overlay")
+#@overlay/match by=overlay.subset({"kind":"Deployment", "metadata":{"name":"argocd-repo-server"}})
+---
+spec:
+  template:
+    spec:
+      containers:
+        - name: cmp
+          command: [/var/run/argocd/argocd-cmp-server]
+          image: index.docker.io/k14s/image@sha256:6ab29951e0207fde6760f6db227f218f20e875f45b22e8ca0ee06c0c8cab32cd 
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 999
+          volumeMounts:
+            - mountPath: /var/run/argocd
+              name: var-files
+            - mountPath: /home/argocd/cmp-server/plugins
+              name: plugins
+            - mountPath: /tmp
+              name: tmp
+            - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+              subPath: plugin.yaml
+              name: cmp-plugin
+      volumes:
+        - configMap:
+            name: cmp-plugin
+          name: cmp-plugin
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cmp-plugin
+data:
+  plugin.yaml: |
+    apiVersion: argoproj.io/v1alpha1
+    kind: ConfigManagementPlugin
+    metadata:
+      name: cmp-plugin
+    spec:
+      version: v1.0
+      generate:
+        command: ["kbld"]
+        args: ["-f", "images.yml", "-f", "."]
+      discover:
+        fileName: images.yml
+      allowConcurrency: true
+      lockRepo: false

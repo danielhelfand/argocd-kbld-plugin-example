@@ -1,0 +1,1 @@
+# argocd-kbld-plugin-example

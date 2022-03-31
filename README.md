@@ -70,7 +70,7 @@ To deploy Argo CD with this plugin, run the following commands against a Kuberne
 
 ```
 kubectl create ns argocd
-kapp deploy --app argocd --namespace argocd -f <(ytt -f plugin-overlay.yml -f https://raw.githubusercontent.com/argoproj/argo-cd/v2.3.2/manifests/core-install.yaml)
+kapp deploy --app argocd --namespace argocd -f <(ytt -f https://raw.githubusercontent.com/danielhelfand/argocd-kbld-plugin-example/main/plugin-overlay.yml -f https://raw.githubusercontent.com/argoproj/argo-cd/v2.3.2/manifests/core-install.yaml)
 ```
 
 Once the command completes, Argo CD should be set up to use kbld as part of its deployment process.

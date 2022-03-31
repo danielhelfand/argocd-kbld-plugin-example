@@ -16,7 +16,7 @@ file to provide greater assurances around what is being deployed to a cluster.
 
 ### kbld Intro
 
-To start, let's show how kbld works. In the `kbld-example-app` directory, you will see a file called [sample-app.yml](kbld-example-app/sample-app.yml). 
+To start, let's show how kbld works. In the `kbld-example-app-plugin` directory, you will see a file called [sample-app.yml](kbld-example-app-plugin/sample-app.yml). 
 The manifest contains a Deployment and a Service, and the Deployment uses the following container image: `danielhelfand/go-web-server:latest`. 
 This image has a tag (`latest`), but tags are not immutable and can change over time. The tag has a corresponding digest `1fda93b8cd881440ad41ea94413aef25e850e60403003fdef30cec384bb6c32f`. 
 
@@ -24,7 +24,7 @@ This digest is immutable and will always pull back this exact version of the con
 latest tag into a digest by running the following command:
 
 ```
-kbld -f kbld-example-app/sample-app.yml
+kbld -f kbld-example-app-plugin/sample-app.yml
 ```
 
 In the output, you can see the latest tag for the deployment image is changed to the following:
@@ -35,13 +35,13 @@ In the output, you can see the latest tag for the deployment image is changed to
 
 So instead of referencing an image by its tag, kbld makes it easy to translate this image reference into an immutable reference that can't be updated.
 
-kbld also helps users resolve image tags to digests in a declarative fashion by using an ImagesLock file. An example of this is shown [here](kbld-example-app/images.yml).
+kbld also helps users resolve image tags to digests in a declarative fashion by using an ImagesLock file. An example of this is shown [here](kbld-example-app-plugin/images.yml).
 
 The ImagesLock in this repository references a different digest from a previous push of the latest tag. Using it with kbld, you will see how you can use this 
 config file to lock in which versions of a container are deployed:
 
 ```
-kbld -f kbld-example-app/sample-app.yml -f kbld-example-app/images.yml
+kbld -f kbld-example-app-plugin/sample-app.yml -f kbld-example-app-plugin/images.yml
 ```
 
 This time the output will show the following digest for the deployment's image:
@@ -82,14 +82,14 @@ Using the Argo CD CLI, let's deploy the sample app using Argo CD and the kbld pl
 ```
 kubectl config set-context --current --namespace=argocd
 argocd login --core
-argocd app create go-web-server --repo https://github.com/danielhelfand/argocd-kbld-plugin-example --path kbld-example-app --dest-name in-cluster --dest-namespace default
+argocd app create go-web-server --repo https://github.com/danielhelfand/argocd-kbld-plugin-example --path kbld-example-app-plugin --dest-name in-cluster --dest-namespace default
 ```
 
 With the Application created, we are all set to use kbld with Argo CD and deploy the sample application. Let's first take a look at what the sample app looks like when we 
 don't use kbld:
 
 ```
-kapp deploy -a go-web-server -f https://raw.githubusercontent.com/danielhelfand/argocd-kbld-plugin-example/main/kbld-example-app/sample-app.yml
+kapp deploy -a go-web-server -f https://raw.githubusercontent.com/danielhelfand/argocd-kbld-plugin-example/main/kbld-example-app-plugin/sample-app.yml
 ```
 
 Once the command completes, let's view the application at localhost:8080/you after running the command below:

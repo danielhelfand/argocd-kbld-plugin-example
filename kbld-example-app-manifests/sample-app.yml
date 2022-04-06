@@ -6,11 +6,9 @@ metadata:
     kbld.k14s.io/images: |
       - origins:
         - resolved:
-            tag: latest
-            url: danielhelfand/go-web-server:latest
-        - preresolved:
-            url: index.docker.io/danielhelfand/go-web-server@sha256:6c0b0765617ea48ab434f58dd7b3481f50539bbc31de2d8a38c67754ef232a74
-        url: index.docker.io/danielhelfand/go-web-server@sha256:6c0b0765617ea48ab434f58dd7b3481f50539bbc31de2d8a38c67754ef232a74
+            tag: 1.0.0
+            url: danielhelfand/go-web-server:1.0.0
+        url: index.docker.io/danielhelfand/go-web-server@sha256:d6854e11026cff8c89b5f81a975ff226907e8d1c61bddf75f03bd33b065a534f
   name: go-web-server-deployment
 spec:
   replicas: 2
@@ -23,7 +21,7 @@ spec:
         app: go-web-server
     spec:
       containers:
-      - image: index.docker.io/danielhelfand/go-web-server@sha256:6c0b0765617ea48ab434f58dd7b3481f50539bbc31de2d8a38c67754ef232a74
+      - image: index.docker.io/danielhelfand/go-web-server@sha256:d6854e11026cff8c89b5f81a975ff226907e8d1c61bddf75f03bd33b065a534f
         imagePullPolicy: Always
         name: go-web-server
         ports:

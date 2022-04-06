@@ -9,7 +9,7 @@ metadata:
             tag: 1.0.0
             url: danielhelfand/go-web-server:1.0.0
         url: index.docker.io/danielhelfand/go-web-server@sha256:d6854e11026cff8c89b5f81a975ff226907e8d1c61bddf75f03bd33b065a534f
-  name: go-web-server-deployment
+  name: go-web-server
 spec:
   replicas: 2
   selector:
@@ -26,15 +26,13 @@ spec:
         name: go-web-server
         ports:
         - containerPort: 8080
-      imagePullSecrets:
-      - name: registry-credentials
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
     app: go-web-server
-  name: go-web-server-service
+  name: go-web-server
 spec:
   ports:
   - port: 8080

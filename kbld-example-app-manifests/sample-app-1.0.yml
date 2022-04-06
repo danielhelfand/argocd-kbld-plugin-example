@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kbld.k14s.io/images: |
+      - origins:
+        - resolved:
+            tag: "1.0"
+            url: danielhelfand/go-web-server:1.0
+        url: index.docker.io/danielhelfand/go-web-server@sha256:514e65d5dc347639903b3c9417f37fee09f23b90fd85c0b1561dfe8f7c4c6a9f
+  name: go-web-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: go-web-server
+  template:
+    metadata:
+      labels:
+        app: go-web-server
+    spec:
+      containers:
+      - image: index.docker.io/danielhelfand/go-web-server@sha256:514e65d5dc347639903b3c9417f37fee09f23b90fd85c0b1561dfe8f7c4c6a9f
+        imagePullPolicy: Always
+        name: go-web-server
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: go-web-server
+  name: go-web-server
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: go-web-server
+  type: NodePort
